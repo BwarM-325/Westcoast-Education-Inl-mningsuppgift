@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
-using StudentBank;
 namespace WestCoastEdu;
 
 
@@ -8,10 +7,13 @@ class Program
 {
     static readonly List<Students> studentList = new List<Students>();
 
+
     static void Main()
     {
         Console.Clear();
         Console.WriteLine("Starting application...");
+        studentList.Add(new Students("John", "Kennedy", 0105073343, 0733654312, "Propellergatan 7", "Lund", 39123));
+        studentList.Add(new Students("Sven", "Svensson", 0204275679, 0700535642, "Eriksvägen 34", "Malmö", 32378));
 
         App();
 
@@ -27,9 +29,9 @@ class Program
             {
                 int amountStudents;
 
-                if(studentList.Capacity > 0)
+                if(studentList.Count > 0)
                 {
-                    amountStudents = studentList.Capacity;
+                    amountStudents = studentList.Count;
                 }
                 else
                 {
@@ -91,7 +93,15 @@ class Program
                         break;
 
                     case "2":
-                        Console.WriteLine("");
+                        Console.WriteLine(studentList[0]);
+                        break;
+                    case "3":
+                        Console.WriteLine("Option 3 has been selected");
+                        break;
+                    case "4":
+                        DisplayPerson();
+                        Console.WriteLine("Press enter to continue...");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -126,7 +136,7 @@ class Program
                 Console.WriteLine("Social Security Number");
                 var id = Console.ReadLine();
 
-                if(int.TryParse(id, out int _id))
+                if(!int.TryParse(id, out int _id))
                 {
                     throw new Exception("Value you have written down is not a number");
                     
@@ -135,7 +145,7 @@ class Program
                 Console.WriteLine("Phone Number");
                 var num = Console.ReadLine();
 
-                if(int.TryParse(num, out int _num))
+                if(!int.TryParse(num, out int _num))
                 {
                     throw new Exception("Value you have written down is not a number");
                     
@@ -147,7 +157,7 @@ class Program
                 Console.WriteLine("Postal number");
                 var postal = Console.ReadLine();
 
-                if(int.TryParse(postal, out int _postal))
+                if(!int.TryParse(postal, out int _postal))
                 {
                     throw new Exception("Value you have written down is not a number");
                     
@@ -171,6 +181,17 @@ class Program
 
             
             
+        }
+    }
+
+
+    static void DisplayPerson()
+    {
+        int amount = studentList.Count;
+        for(int i=0; i < amount; i++)
+        {
+            Console.WriteLine(studentList[i]);
+            Console.WriteLine("-----------");
         }
     }
 }
