@@ -2,10 +2,10 @@ using System.Globalization;
 
 namespace WestCoastEdu;
 
-public class Teachers(string firstName, string lastName, int identity, int number, string homeAdress, string city, int postAdress, string subject, string course)
+public class Teachers(string firstName, string lastName, string identity, string number, string homeAdress, string city, string postAdress, string subject, string course)
 {
     public override string ToString()
     {
-        return $"Teacher: {lastName}, {firstName}. Contacts: {number}. Adress: {homeAdress}, {postAdress}, {city}. Social Security Number: {identity}. Subject(s): {subject}. Course: {course}";
+        return $"Teacher: {lastName}, {firstName}. \nContacts: {number}. \nAdress: {homeAdress}, {postAdress}, {city}. \nSocial Security Number: {identity}. \nSubject(s): {subject}. \nCourse in charge of: {course}";
     }
 }

@@ -6,14 +6,16 @@ namespace WestCoastEdu;
 class Program
 {
     static readonly List<Students> studentList = new List<Students>();
+    static readonly List<Teachers> teacherList = new List<Teachers>();
+    static readonly List<Courses> courseList = new List<Courses>();
 
 
     static void Main()
     {
         Console.Clear();
         Console.WriteLine("Starting application...");
-        studentList.Add(new Students("John", "Kennedy", 0105073343, 0733654312, "Propellergatan 7", "Lund", 39123));
-        studentList.Add(new Students("Sven", "Svensson", 0204275679, 0700535642, "Eriksvägen 34", "Malmö", 32378));
+        studentList.Add(new Students("John", "Kennedy", "0105073343", "0733654312", "Propellergatan 7", "Lund", "39123"));
+        studentList.Add(new Students("Sven", "Svensson", "0204275679", "0700535642", "Eriksvägen 34", "Malmö", "32378"));
 
         App();
 
@@ -93,15 +95,23 @@ class Program
                         break;
 
                     case "2":
-                        Console.WriteLine(studentList[0]);
+                        Console.WriteLine("Option 2 has been selected");
                         break;
                     case "3":
-                        Console.WriteLine("Option 3 has been selected");
+                        Console.Clear();
+                        Console.WriteLine("------ All Courses -------");
+                        DisplayCourses();
+                        Console.WriteLine("Press enter to continue");
+                        Console.ReadLine();
+
                         break;
                     case "4":
+                        Console.Clear();
+                        Console.WriteLine("------ All Students -------");
                         DisplayPerson();
                         Console.WriteLine("Press enter to continue...");
                         Console.ReadLine();
+                        Console.Clear();
                         break;
                 }
             }
@@ -124,7 +134,7 @@ class Program
     {
         if(option == "Stu")
         {
-            Console.WriteLine("Write down the Students information");
+            Console.WriteLine("Write down the students information");
             //Might need optimisation here for better info dumping
             // Can probably duplicate this for Teacher and Supervisors too
             try
@@ -133,23 +143,10 @@ class Program
                 var fName = Console.ReadLine();
                 Console.WriteLine("Last Name");
                 var lName = Console.ReadLine();
-                Console.WriteLine("Social Security Number");
+                Console.WriteLine("Social Security Number --- 10 digit");
                 var id = Console.ReadLine();
-
-                if(!int.TryParse(id, out int _id))
-                {
-                    throw new Exception("Value you have written down is not a number");
-                    
-                }
-
                 Console.WriteLine("Phone Number");
                 var num = Console.ReadLine();
-
-                if(!int.TryParse(num, out int _num))
-                {
-                    throw new Exception("Value you have written down is not a number");
-                    
-                }
                 Console.WriteLine("Home Adress");
                 var address = Console.ReadLine();
                 Console.WriteLine("City");
@@ -157,15 +154,10 @@ class Program
                 Console.WriteLine("Postal number");
                 var postal = Console.ReadLine();
 
-                if(!int.TryParse(postal, out int _postal))
-                {
-                    throw new Exception("Value you have written down is not a number");
-                    
-                }
 
                 
                 
-                studentList.Add(new Students(fName, lName, _id, _num, address, city, _postal));
+                studentList.Add(new Students(fName, lName, id, num, address, city, postal));
             }
             catch(Exception ex)
             {
@@ -182,6 +174,84 @@ class Program
             
             
         }
+        else if (option == "Tea")
+        {
+            Console.WriteLine("Write down the teachers information");
+
+            try
+            {
+                Console.WriteLine("First Name");
+                var fName = Console.ReadLine();
+                Console.WriteLine("Last Name");
+                var lName = Console.ReadLine();
+                Console.WriteLine("Social Security Number");
+                var id = Console.ReadLine();
+                Console.WriteLine("Phone Number");
+                var num = Console.ReadLine();
+                Console.WriteLine("Home Adress");
+                var address = Console.ReadLine();
+                Console.WriteLine("City");
+                var city = Console.ReadLine();
+                Console.WriteLine("Postal number");
+                var postal = Console.ReadLine();
+                Console.WriteLine("Subject");
+                var subj = Console.ReadLine();
+                Console.WriteLine("Courses they are incharge of");
+                var course = Console.ReadLine();
+
+                
+                //Change to teacher list
+                teacherList.Add(new Teachers(fName, lName, id, num, address, city, postal, subj, course));
+            }
+            catch(Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+                App(); 
+            }
+            finally
+            {
+                Console.WriteLine("Finished");
+            }
+        }
+        else if (option == "Sup")
+        {
+            Console.WriteLine("Write down the supervisor information");
+
+            try
+            {
+                Console.WriteLine("First Name");
+                var fName = Console.ReadLine();
+                Console.WriteLine("Last Name");
+                var lName = Console.ReadLine();
+                Console.WriteLine("Social Security Number");
+                var id = Console.ReadLine();
+                Console.WriteLine("Phone Number");
+                var num = Console.ReadLine();
+                Console.WriteLine("Home Adress");
+                var address = Console.ReadLine();
+                Console.WriteLine("City");
+                var city = Console.ReadLine();
+                Console.WriteLine("Postal number");
+                var postal = Console.ReadLine();
+
+                
+                //Change to supervisor list
+                studentList.Add(new Students(fName, lName, id, num, address, city, postal));
+            }
+            catch(Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+                App(); 
+            }
+            finally
+            {
+                Console.WriteLine("Finished");
+            }
+        }
     }
 
 
@@ -191,6 +261,16 @@ class Program
         for(int i=0; i < amount; i++)
         {
             Console.WriteLine(studentList[i]);
+            Console.WriteLine("-----------");
+        }
+    }
+
+    static void DisplayCourses()
+    {
+        int amount = courseList.Count;
+        for(int i=0; i < amount; i++)
+        {
+            Console.WriteLine(courseList[i]);
             Console.WriteLine("-----------");
         }
     }
