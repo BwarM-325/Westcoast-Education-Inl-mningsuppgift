@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 namespace WestCoastEdu;
 
@@ -47,7 +49,7 @@ class Program
                 Console.WriteLine($"Students: {amountStudents}");
                 Console.WriteLine("1. Add new data to the database");
                 Console.WriteLine("2. Add Administrator");
-                Console.WriteLine("3. List all courses");
+                Console.WriteLine("3. List all Courses");
                 Console.WriteLine("4. List all Students");
                 Console.WriteLine("0. Exit program (saving not included)");
                 Console.WriteLine("--------------------------");
@@ -89,7 +91,7 @@ class Program
                         }
                         else if (inpu == "4")
                         {
-                            Console.WriteLine("Option 4 has been selected");
+                            AddToDatabase("Cou");
                         }
                         
                         break;
@@ -239,6 +241,44 @@ class Program
                 
                 //Change to supervisor list
                 studentList.Add(new Students(fName, lName, id, num, address, city, postal));
+            }
+            catch(Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+                App(); 
+            }
+            finally
+            {
+                Console.WriteLine("Finished");
+            }
+        }
+        
+        else if (option == "Cou")
+        {
+            Console.WriteLine("Write down the Course information");
+
+            try
+            {
+                Console.WriteLine("Name of course");
+                var title = Console.ReadLine();
+                Console.WriteLine("Length of course dated in weeks");
+                var length = Console.ReadLine();
+                Console.WriteLine("Start date (empty for today or write in format YYYY-MM-DD with spaces)");
+                var date = Console.ReadLine();
+
+                if(!string.IsNullOrEmpty(date) && !DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var _date))
+                {
+                    throw new Exception("Wrong formatting");   
+                }
+
+                Random rnd = new();
+
+                string courseId = rnd.Next(0, 100000).ToString("D5");
+
+                
+                courseList.Add(new Courses(courseId, title, length, date));
             }
             catch(Exception ex)
             {
