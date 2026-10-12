@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime;
 using System.Security.Cryptography.X509Certificates;
 namespace WestCoastEdu;
 
@@ -10,14 +11,28 @@ class Program
     static readonly List<Students> studentList = new List<Students>();
     static readonly List<Teachers> teacherList = new List<Teachers>();
     static readonly List<Courses> courseList = new List<Courses>();
+    static readonly List<Supervisors> supervisorList = new List<Supervisors>();
 
 
     static void Main()
     {
         Console.Clear();
         Console.WriteLine("Starting application...");
+
+        //Testing purpose until I try doing JSON Serialisation
         studentList.Add(new Students("John", "Kennedy", "0105073343", "0733654312", "Propellergatan 7", "Lund", "39123"));
         studentList.Add(new Students("Sven", "Svensson", "0204275679", "0700535642", "Eriksvägen 34", "Malmö", "32378"));
+        studentList.Add(new Students("Jörgen", "Kolgana", "0407142354", "078724111", "Nobelsgatan 6", "Malmö", "29128"));
+        studentList.Add(new Students("Helena", "Stuvart", "0410165456", "076675555", "Nobelsgatan 3", "Trelleborg", "29128"));
+        studentList.Add(new Students("Berg", "Stefan", "0407276567", "070002342", "Eriksvägen 27", "Malmö", "21539"));
+
+        teacherList.Add(new Teachers("Stölvart", "Ungeberga", "8906149943", "0700023452", "Förodladegatan 4", "Simrishamn", "55643", "English", "English"));
+        teacherList.Add(new Teachers("Jeff", "Mittervald", "9210166523", "0761024172", "Nystensvägen 4", "Malmö", "22633", "Mathematics", "Mathematics"));
+        
+        supervisorList.Add(new Supervisors("Jonny", "Möller", "9410014442", "0767774772", "Propellergatan 7", "Malmö", "24433", "Swedish", "English", "2020-03-10"));
+
+        courseList.Add(new Courses("122342", "Mathamatics", "8", "2026-09-22"));
+        courseList.Add(new Courses("122342", "English 1", "12", "2026-08-12"));
 
         App();
 
@@ -49,8 +64,8 @@ class Program
                 Console.WriteLine($"Students: {amountStudents}");
                 Console.WriteLine("1. Add new data to the database");
                 Console.WriteLine("2. Add Administrator");
-                Console.WriteLine("3. List all Courses");
-                Console.WriteLine("4. List all Students");
+                Console.WriteLine("3. List a database");
+                Console.WriteLine("4. ---");
                 Console.WriteLine("0. Exit program (saving not included)");
                 Console.WriteLine("--------------------------");
 
@@ -83,11 +98,11 @@ class Program
                         }
                         else if (inpu == "2")
                         {
-                            Console.WriteLine("Option 2 has been selected");
+                            AddToDatabase("Tea");
                         }
                         else if (inpu == "3")
                         {
-                            Console.WriteLine("Option 3 has been selected");
+                            AddToDatabase("Sup");
                         }
                         else if (inpu == "4")
                         {
@@ -100,11 +115,43 @@ class Program
                         Console.WriteLine("Option 2 has been selected");
                         break;
                     case "3":
-                        Console.Clear();
-                        Console.WriteLine("------ All Courses -------");
-                        DisplayCourses();
-                        Console.WriteLine("Press enter to continue");
-                        Console.ReadLine();
+                        Console.WriteLine("What data would you like to list");
+                        Console.WriteLine("1. Student");
+                        Console.WriteLine("2. Teacher");
+                        Console.WriteLine("3. Supervisor");
+                        Console.WriteLine("4. Course");
+
+
+                        var inp = Console.ReadLine();
+
+                        if(string.IsNullOrWhiteSpace(inp))
+                        {
+                            Environment.Exit(0);
+                        }
+                        else if (inp == "1")
+                        {
+                            DisplayList("Stu");
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
+                        else if (inp == "2")
+                        {
+                            DisplayList("Tea");
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
+                        else if (inp == "3")
+                        {
+                            DisplayList("Sup");
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
+                        else if (inp == "4")
+                        {
+                            DisplayList("Cou");
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
 
                         break;
                     case "4":
@@ -202,7 +249,7 @@ class Program
                 var course = Console.ReadLine();
 
                 
-                //Change to teacher list
+
                 teacherList.Add(new Teachers(fName, lName, id, num, address, city, postal, subj, course));
             }
             catch(Exception ex)
@@ -237,10 +284,21 @@ class Program
                 var city = Console.ReadLine();
                 Console.WriteLine("Postal number");
                 var postal = Console.ReadLine();
+                Console.WriteLine("Subject");
+                var subj = Console.ReadLine();
+                Console.WriteLine("Courses they are incharge of");
+                var course = Console.ReadLine();
+                Console.WriteLine("Date hired (leave empty if today)");
+                var hiredDate = Console.ReadLine();
 
-                
-                //Change to supervisor list
-                studentList.Add(new Students(fName, lName, id, num, address, city, postal));
+                if(!string.IsNullOrEmpty(hiredDate) && !DateTime.TryParseExact(hiredDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var _date))
+                {
+                    throw new Exception("Wrong formatting. Try again");   
+                }
+
+
+
+                supervisorList.Add(new Supervisors(fName, lName, id, num, address, city, postal, subj, course, hiredDate));
             }
             catch(Exception ex)
             {
@@ -311,6 +369,34 @@ class Program
         for(int i=0; i < amount; i++)
         {
             Console.WriteLine(courseList[i]);
+            Console.WriteLine("-----------");
+        }
+    }
+
+    static void DisplayList(string options)
+    {
+        dynamic listOptions = null;
+        if(options == "Stu")
+        {
+            listOptions = studentList;
+        }
+        else if (options == "Tea")
+        {
+            listOptions = teacherList;
+        }
+        else if (options == "Cou")
+        {
+            listOptions = courseList;
+        }
+        else if (options == "Sup")
+        {
+            listOptions = supervisorList;
+        }
+        
+        int amount = listOptions.Count;
+        for(int i=0; i < amount; i++)
+        {
+            Console.WriteLine(listOptions[i]);
             Console.WriteLine("-----------");
         }
     }
