@@ -8,10 +8,11 @@ namespace WestCoastEdu;
 
 class Program
 {
-    static readonly List<Students> studentList = new List<Students>();
+    static List<Students> studentList = new List<Students>();
     static readonly List<Teachers> teacherList = new List<Teachers>();
     static readonly List<Courses> courseList = new List<Courses>();
     static readonly List<Supervisors> supervisorList = new List<Supervisors>();
+    static readonly List<Admins> adminList = new List<Admins>();
 
 
     static void Main()
@@ -20,6 +21,9 @@ class Program
         Console.WriteLine("Starting application...");
 
         //Testing purpose until I try doing JSON Serialisation
+
+        DataManagment.LoadData(studentList, teacherList, courseList, supervisorList, adminList);
+        /*
         studentList.Add(new Students("John", "Kennedy", "0105073343", "0733654312", "Propellergatan 7", "Lund", "39123"));
         studentList.Add(new Students("Sven", "Svensson", "0204275679", "0700535642", "Eriksvägen 34", "Malmö", "32378"));
         studentList.Add(new Students("Jörgen", "Kolgana", "0407142354", "078724111", "Nobelsgatan 6", "Malmö", "29128"));
@@ -33,6 +37,7 @@ class Program
 
         courseList.Add(new Courses("122342", "Mathamatics", "8", "2026-09-22"));
         courseList.Add(new Courses("122342", "English 1", "12", "2026-08-12"));
+        */
 
         App();
 
@@ -65,7 +70,6 @@ class Program
                 Console.WriteLine("1. Add new data to the database");
                 Console.WriteLine("2. Add Administrator");
                 Console.WriteLine("3. List a database");
-                Console.WriteLine("4. ---");
                 Console.WriteLine("0. Exit program (saving not included)");
                 Console.WriteLine("--------------------------");
 
@@ -73,6 +77,7 @@ class Program
 
                 if(string.IsNullOrWhiteSpace(input)|| input == "x" || input == "0")
                 {
+                    DataManagment.SaveData(studentList, teacherList, courseList, supervisorList, adminList);
                     Environment.Exit(0);
                 }
 
@@ -112,7 +117,7 @@ class Program
                         break;
 
                     case "2":
-                        Console.WriteLine("Option 2 has been selected");
+                        AddAdmin();
                         break;
                     case "3":
                         Console.WriteLine("What data would you like to list");
@@ -153,14 +158,6 @@ class Program
                             Console.ReadLine();
                         }
 
-                        break;
-                    case "4":
-                        Console.Clear();
-                        Console.WriteLine("------ All Students -------");
-                        DisplayPerson();
-                        Console.WriteLine("Press enter to continue...");
-                        Console.ReadLine();
-                        Console.Clear();
                         break;
                 }
             }
@@ -399,5 +396,55 @@ class Program
             Console.WriteLine(listOptions[i]);
             Console.WriteLine("-----------");
         }
+    }
+    
+    static void AddAdmin()
+    {
+        Console.WriteLine("Write down Administrators information");
+
+        try
+        {
+            Console.WriteLine("First Name");
+            var fName = Console.ReadLine();
+            Console.WriteLine("Last Name");
+            var lName = Console.ReadLine();
+            Console.WriteLine("Social Security Number");
+            var id = Console.ReadLine();
+            Console.WriteLine("Phone Number");
+            var num = Console.ReadLine();
+            Console.WriteLine("Home Adress");
+            var address = Console.ReadLine();
+            Console.WriteLine("City");
+            var city = Console.ReadLine();
+            Console.WriteLine("Postal number");
+            var postal = Console.ReadLine();
+            Console.WriteLine("Subject");
+            var subj = Console.ReadLine();
+            Console.WriteLine("Courses they are incharge of");
+            var course = Console.ReadLine();
+            Console.WriteLine("Date hired (leave empty if today)");
+            var hiredDate = Console.ReadLine();
+
+            if(!string.IsNullOrEmpty(hiredDate) && !DateTime.TryParseExact(hiredDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var _date))
+            {
+                throw new Exception("Wrong formatting. Try again");   
+            }
+
+
+
+            adminList.Add(new Admins(fName, lName, id, num, address, city, postal, subj, course, hiredDate));
+        }
+        catch(Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(ex.Message);
+            Console.ResetColor();
+            App(); 
+        }
+        finally
+        {
+            Console.WriteLine("Finished");
+        }
+
     }
 }
